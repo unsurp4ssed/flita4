@@ -6,7 +6,7 @@
 #include <error.h>
 #define DATAFILE "../input2.txt"
 #define STATFILE "../info.txt"
-#define MAX_VERTICES 500
+#define MAX_VERTICES 100
 int matrix[MAX_VERTICES][MAX_VERTICES];
 
 typedef struct Edge {
@@ -17,6 +17,7 @@ int* getMaxValencies(int m[MAX_VERTICES][MAX_VERTICES], int v) {
     int* array = calloc(v, sizeof(int));
     for (int j = 0; j < v; j++) {
         for (int i = 0; i < v; i++) {
+            if (i==j) array[j] += 2;
             if (m[j][i] != 0) array[j]++;
         }
     }
@@ -100,16 +101,15 @@ long long doTheStuff(int vertices) {
             }
         }
     }
+    fprintf(dotFile, "\t%d -- %d; \n", edge.originNode, edge.destNode);
+
+
+    fprintf(dotFile, "}");
+    fclose(dotFile);
+
+    system("dot -Tpng ../graph.dot -o ../graph.png"); //executing Graphviz which makes png of the graph
+    system("start ../graph.png"); //opening image viewer automatically
 */
-    //fprintf(dotFile, "\t%d -- %d; \n", edge.originNode, edge.destNode);
-
-
-    //fprintf(dotFile, "}");
-    //fclose(dotFile);
-
-    //system("dot -Tpng ../graph.dot -o ../graph.png"); //executing Graphviz which makes png of the graph
-    //system("start ../graph.png"); //opening image viewer automatically
-
     //if (x > ((y - 1 ) * (y - 2)) / 2) printf("The graph is bonded"); //
     //else printf("The graph is NOT bonded");
     return runtime;
@@ -135,9 +135,9 @@ void printMatrix(int nodes) {
 }
 
 int main() {
-    FILE* gnuplotData = fopen(STATFILE,"a+");
-    for (int testNo = 10; testNo<500; testNo++) {
-        if (testNo % 10 == 0) printf("|");
+    FILE* gnuplotData = fopen(STATFILE,"w");
+    for (int testNo = 10; testNo<100; testNo++) {
+        if (testNo % 5 == 0) printf("|");
         long long runtime;
         generateAdjMatrix(testNo);
         runtime = doTheStuff(testNo);
